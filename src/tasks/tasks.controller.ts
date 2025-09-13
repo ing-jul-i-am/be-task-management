@@ -19,9 +19,9 @@ export class TasksController {
         return this.tasksService.getAllTasks();
     }
 
-    @Get('/:id')
-    getTaskById(@Param('id') id: string): Task {
-        return this.tasksService.getTaskById(id);
+    @Get('/:taskId')
+    getTaskById(@Param('taskId') taskId: string): Task {
+        return this.tasksService.getTaskById(taskId);
     }
 
     //Con esto, se accede al body de la request

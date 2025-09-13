@@ -15,12 +15,12 @@ export class TasksController {
 
     // This method will handle GET requests to "/tasks"
     @Get()
-    getAllTasks(): Task[] {
+    getAllTasks(): Promise<Task[]> {
         return this.tasksService.getAllTasks();
     }
 
     @Get('/:taskId')
-    getTaskById(@Param('taskId') taskId: string): Task {
+    getTaskById(@Param('taskId') taskId: string): Promise<Task | undefined> {
         return this.tasksService.getTaskById(taskId);
     }
 
@@ -30,7 +30,7 @@ export class TasksController {
     //     console.log(body);
     // }
 
-    @Post()
+    /* @Post()
     createTask(
         @Body('title') title: string,
         @Body('description') description: string): Task {
@@ -38,5 +38,5 @@ export class TasksController {
             const task = this.tasksService.createTask(title, description);
             console.log('Task', task.title, 'created:', task);
             return task;
-    }
+    } */
 }

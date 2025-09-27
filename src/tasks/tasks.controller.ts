@@ -3,6 +3,7 @@ import { TasksService } from './tasks.service';
 import { Task } from './tasks.model';
 import { TaskStatus } from './tasks.model';
 import { v4 as uuid } from 'uuid';
+import { Comment } from './comment.entity';
 
 // This controller handles all the calls related to "/tasks" endpoint
 // Notice that what is inside the parenthesis of @Controller is the base route for this controller
@@ -41,13 +42,22 @@ export class TasksController {
         return updated;
     }
 
-    /* @Post()
-    createTask(
-        @Body('title') title: string,
-        @Body('description') description: string): Task {
-            console.log(title, description);
-            const task = this.tasksService.createTask(title, description);
-            console.log('Task', task.title, 'created:', task);
-            return task;
-    } */
+    @Get('/:taskid/comments')
+    async getCommentsByTaskId(@Param('taskid') taskid: string): Promise<Comment[]> {
+        return this.tasksService.getCommentsByTaskId(taskid);
+    }
+
+    @Post('/:taskid/comments')
+    async addComment(
+        @Param('taskid') taskid: string,
+        @Body() body: { user_id: number; content: string }
+    ): Promise<Comment | { message: string }> {
+        const comment = await this.tasksService.addCommentToTask(taskid, body);
+        if (!comment) {
+            console.log('Task ' + taskid + ' not found');
+            return { message: 'Task not found' };
+        }
+        console.log('Comment added to task ' + taskid + ':', comment);
+        return comment;
+    }
 }

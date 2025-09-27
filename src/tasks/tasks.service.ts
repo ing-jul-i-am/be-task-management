@@ -4,12 +4,15 @@ import { TaskStatus } from './tasks.model';
 import { v4 as uuid } from 'uuid';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Comment } from './comment.entity';
 
 @Injectable()
 export class TasksService {
     constructor(
         @InjectRepository(Task)
         private tasksRepository: Repository<Task>,
+        @InjectRepository(Comment)
+        private commentsRepository: Repository<Comment>,
     ) {}
 
     async getAllTasks(): Promise<Task[]> {
@@ -42,16 +45,29 @@ export class TasksService {
         return this.tasksRepository.save(task);
     }
 
-    // async createTask(title: string, description: string): Promise<Task> {
-    //     const task: Task = this.tasksRepository.create({
-    //         taskId: uuid(),
-    //         title,
-    //         description,
-    //         status: TaskStatus.OPEN,
-    //     });
-    //     return this.tasksRepository.save(task);
-    //     // this.tasks.push(task);
-    //     // return task;
-    // }
+    async getCommentsByTaskId(taskid: string): Promise<Comment[]> {
+        const task = await this.tasksRepository.findOne({ where: { taskid } });
+        if (!task) return [];
+        return this.commentsRepository.find({ where: { task_id: task.id } });
+    }
+
+    async addCommentToTask(taskid: string, data: { user_id: number; content: string }): Promise<Comment | null> {
+        const task = await this.tasksRepository.findOne({ where: { taskid } });
+        if (!task) {
+            console.error(`Task with id ${taskid} not found.`);
+            return null;
+        }
+
+        const comment = this.commentsRepository.create({
+            task_id: task.id,
+            user_id: data.user_id,
+            content: data.content,
+            created_at: new Date(),
+        });
+        console.log('Created Comment:', comment);
+        return this.commentsRepository.save(comment);
+    }
+
+
 
 }

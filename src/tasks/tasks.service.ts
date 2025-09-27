@@ -20,25 +20,38 @@ export class TasksService {
         return this.tasksRepository.findOne({ where: { taskid } });
     }
 
-    // private tasks: Task[] = []; // Example tasks
-
-    /*
-    getAllTasks(): Task[] {
-        return this.tasks;
-    }
-
-    createTask(title: string, description: string): Task {
-        const task: Task = {
-            taskId: uuid(),
-            title,
-            description,
+    async createTask(data: Partial<Task>): Promise<Task> {
+        const task: Task = this.tasksRepository.create({
+            taskid: uuid(),
+            title: data.title,
+            description: data.description,
             status: TaskStatus.OPEN,
-        }
-        this.tasks.push(task);
-        return task;
+            created_at: new Date(),
+            updated_at: new Date(),
+        });
+        console.log('Created Task:', task);
+        return this.tasksRepository.save(task);
     }
 
-    getTaskById(taskId: string): Task {
-        return this.tasks.find(task => task.taskId === taskId);
-    } */
+    async updateTask(taskid: string, data: Partial<Task>): Promise<Task | null> {
+        const task = await this.tasksRepository.findOne({ where: { taskid } });
+        if (!task) {
+            return null;
+        }
+        Object.assign(task, data, { updated_at: new Date() });
+        return this.tasksRepository.save(task);
+    }
+
+    // async createTask(title: string, description: string): Promise<Task> {
+    //     const task: Task = this.tasksRepository.create({
+    //         taskId: uuid(),
+    //         title,
+    //         description,
+    //         status: TaskStatus.OPEN,
+    //     });
+    //     return this.tasksRepository.save(task);
+    //     // this.tasks.push(task);
+    //     // return task;
+    // }
+
 }

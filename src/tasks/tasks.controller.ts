@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Request } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from './tasks.model';
 import { TaskStatus } from './tasks.model';
@@ -13,12 +13,17 @@ import { AuthGuard } from '@nestjs/passport';
 @Controller('tasks')
 export class TasksController {
     constructor(private tasksService: TasksService) { }
-    private tasks: Task[] = []; // Example tasks
 
     // This method will handle GET requests to "/tasks"
     @Get()
-    getAllTasks(): Promise<Task[]> {
-        return this.tasksService.getAllTasks();
+    getAllTasks(@Request() req): Promise<Task[]> {
+        const user = req.user;
+        console.log('User making request:', user);
+        if (user.role == 'admin') {
+            return this.tasksService.getAllTasks();
+        } else if (user.role == 'worker') {
+            return this.tasksService.getTasksByAssigneeId(user.userId);
+        }
     }
 
     @Get('/:taskId')
@@ -27,7 +32,10 @@ export class TasksController {
     }
 
     @Post('/create')
-    async createTask(@Body() body: Partial<Task>): Promise<Task | Error> {
+    async createTask(@Body() body: Partial<Task>, @Request() req): Promise<Task | Error> {
+        const user = req.user;
+        body.created_by = user.userId; // Set the creator of the task to the logged-in user
+        console.log('User making request:', user);
         return this.tasksService.createTask(body);
     }
 
@@ -53,9 +61,14 @@ export class TasksController {
     @Post('/:taskid/comments')
     async addComment(
         @Param('taskid') taskid: string,
-        @Body() body: { user_id: number; content: string }
+        @Body() body: { content: string },
+        @Request() req
     ): Promise<Comment | { message: string }> {
-        const comment = await this.tasksService.addCommentToTask(taskid, body);
+        const user = req.user;
+        const comment = await this.tasksService.addCommentToTask(taskid, {
+            user_id: user.userId,
+            content: body.content,
+        });
         if (!comment) {
             console.log('Task ' + taskid + ' not found');
             return { message: 'Task not found' };

@@ -3,6 +3,7 @@ export interface Task {
     title: string;
     description: string;
     status: TaskStatus;
+    created_by: number; // User ID of the creator
 }
 
 export enum TaskStatus {

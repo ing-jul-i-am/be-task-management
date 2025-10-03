@@ -52,7 +52,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n        \"title\": \"Tarea desde postman AUTH\",\n        \"description\": \"postman hizo esto.\",\n        \"assignee_id\": 3,\n        \"committed_date\": \"2025-10-10T00:00:00.000Z\",\n        \"start_date\": \"2025-10-03T00:00:00.000Z\",\n        \"status\": \"OPEN\"\n    }",
+					"raw": "{\n        \"title\": \"Tarea desde postman. \",\n        \"description\": \"Creada por id 3.\",\n        \"assignee_id\": 2,\n        \"committed_date\": \"2025-10-10T00:00:00.000Z\",\n        \"start_date\": \"2025-10-03T00:00:00.000Z\",\n        \"status\": \"OPEN\"\n    }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -187,7 +187,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"user_id\": 2,\r\n  \"content\": \"Este es un comentario nuevo desde postman. P1\"\r\n}",
+					"raw": "{\r\n  \"content\": \"Este es un comentario nuevo desde postman. Soy Admin.\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -231,7 +231,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"Julian\",\r\n    \"password\": \"Test123\"\r\n}",
+					"raw": "{\r\n    \"username\": \"Admin\",\r\n    \"password\": \"Test123\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

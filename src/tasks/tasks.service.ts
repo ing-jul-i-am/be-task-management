@@ -76,6 +76,7 @@ export class TasksService {
         return this.commentsRepository.save(comment);
     }
 
-
-
+    async getTasksByAssigneeId(userId: number): Promise<Task[]> {
+        return this.tasksRepository.find({ where: { assignee_id: userId } });
+    }
 }

@@ -23,12 +23,20 @@ export class TasksService {
         return this.tasksRepository.findOne({ where: { taskid } });
     }
 
-    async createTask(data: Partial<Task>): Promise<Task> {
+    async createTask(data: Partial<Task>): Promise<Task | Error> {
+        if (!data.title || !data.description || !data.created_by) {
+            console.error('Missing required fields: title, description, created_by');
+            return new Error('Missing required fields: title, description, created_by');
+        }
         const task: Task = this.tasksRepository.create({
             taskid: uuid(),
             title: data.title,
             description: data.description,
+            created_by: data.created_by,
+            assignee_id: data.assignee_id,
             status: TaskStatus.OPEN,
+            committed_date: data.committed_date,
+            start_date: data.start_date,
             created_at: new Date(),
             updated_at: new Date(),
         });

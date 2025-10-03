@@ -10,6 +10,16 @@
 		{
 			"name": "Get all tasks",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -28,11 +38,21 @@
 		{
 			"name": "Create task",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"Tarea desde postman 3\",\n    \"description\": \"postman hizo esto 3.\"\n}",
+					"raw": "{\n        \"title\": \"Tarea desde postman AUTH\",\n        \"description\": \"postman hizo esto.\",\n        \"assignee_id\": 3,\n        \"committed_date\": \"2025-10-10T00:00:00.000Z\",\n        \"start_date\": \"2025-10-03T00:00:00.000Z\",\n        \"status\": \"OPEN\"\n    }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -56,6 +76,16 @@
 		{
 			"name": "Get task by ID",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -75,6 +105,16 @@
 		{
 			"name": "Update task",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -103,17 +143,27 @@
 		{
 			"name": "Get comments",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/tasks/5ec287d6-2c9d-4f93-8727-8c248dc65d05/comments",
+					"raw": "localhost:3000/tasks/0474764d-e2ef-458e-854a-962223ac0b8d/comments",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"tasks",
-						"5ec287d6-2c9d-4f93-8727-8c248dc65d05",
+						"0474764d-e2ef-458e-854a-962223ac0b8d",
 						"comments"
 					]
 				}
@@ -123,11 +173,21 @@
 		{
 			"name": "Add comments",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"user_id\": 2,\r\n  \"content\": \"Este es un comentario nuevo desde postman.\"\r\n}",
+					"raw": "{\r\n  \"user_id\": 2,\r\n  \"content\": \"Este es un comentario nuevo desde postman. P1\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -135,19 +195,93 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/tasks/5ec287d6-2c9d-4f93-8727-8c248dc65d05/comments",
+					"raw": "localhost:3000/tasks/0474764d-e2ef-458e-854a-962223ac0b8d/comments",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"tasks",
-						"5ec287d6-2c9d-4f93-8727-8c248dc65d05",
+						"0474764d-e2ef-458e-854a-962223ac0b8d",
 						"comments"
 					]
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let responseData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"access_token\", responseData.access_token);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Julian\",\r\n    \"password\": \"Test123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "default"
 		}
 	]
 }

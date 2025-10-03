@@ -4,9 +4,12 @@ import { Task } from './tasks.model';
 import { TaskStatus } from './tasks.model';
 import { v4 as uuid } from 'uuid';
 import { Comment } from './comment.entity';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 // This controller handles all the calls related to "/tasks" endpoint
 // Notice that what is inside the parenthesis of @Controller is the base route for this controller
+@UseGuards(AuthGuard('jwt'))
 @Controller('tasks')
 export class TasksController {
     constructor(private tasksService: TasksService) { }
@@ -24,7 +27,7 @@ export class TasksController {
     }
 
     @Post('/create')
-    async createTask(@Body() body: Partial<Task>): Promise<Task> {
+    async createTask(@Body() body: Partial<Task>): Promise<Task | Error> {
         return this.tasksService.createTask(body);
     }
 

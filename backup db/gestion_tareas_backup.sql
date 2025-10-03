@@ -132,13 +132,12 @@ ALTER SEQUENCE public.tasks_id_seq OWNED BY public.tasks.id;
 
 CREATE TABLE public.users (
     id integer NOT NULL,
-    username character varying(50) NOT NULL,
-    email character varying(100) NOT NULL,
-    password character varying(255) NOT NULL,
-    role character varying(20) NOT NULL,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT users_role_check CHECK (((role)::text = ANY ((ARRAY['admin'::character varying, 'worker'::character varying])::text[])))
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    username character varying NOT NULL,
+    email character varying NOT NULL,
+    password character varying NOT NULL,
+    role character varying
 );
 
 
@@ -192,8 +191,14 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 COPY public.comments (id, task_id, user_id, created_at, content) FROM stdin;
-1	5	2	2025-09-27 06:12:07.828652	Soy un comentario
-2	5	2	2025-09-27 06:55:11.127	Este es un comentario nuevo desde postman.
+1	3	2	2025-10-03 05:59:40.479	Este es un comentario nuevo desde postman.
+2	3	2	2025-10-03 06:00:08.874	Este es un comentario nuevo desde postman. P@
+3	3	2	2025-10-03 06:00:11.837	Este es un comentario nuevo desde postman. P3
+4	2	2	2025-10-03 06:01:11.797	Este es un comentario nuevo desde postman. P3
+5	2	2	2025-10-03 06:07:13.894	Este es un comentario nuevo desde postman. P2
+6	2	2	2025-10-03 06:07:17.248	Este es un comentario nuevo desde postman. P1
+7	2	2	2025-10-03 15:22:15.635	Este es un comentario nuevo desde postman. P1
+8	2	4	2025-10-03 17:10:25.688	Este es un comentario nuevo desde postman. Soy Admin.
 \.
 
 
@@ -204,9 +209,17 @@ COPY public.comments (id, task_id, user_id, created_at, content) FROM stdin;
 COPY public.tasks (id, assignee_id, created_by, created_at, updated_at, taskid, title, description, committed_date, start_date, status) FROM stdin;
 3	2	2	\N	\N	e164c179-bc29-4893-af9c-9a19973c2dfa	Test 2	Test 2	\N	\N	OPEN
 2	2	2	2025-09-13 06:11:10.666442	2025-09-13 06:11:10.666442	0474764d-e2ef-458e-854a-962223ac0b8d	Test 1	Test 1	\N	\N	IN_PROGRESS
-4	\N	\N	\N	2025-09-27 06:03:41.918	3206f895-0e63-4a7c-874b-a1a473cb04b0	Nuevo título desde postman	postman hizo esto.	\N	\N	IN_PROGRESS
-6	\N	\N	2025-09-27 06:05:04.575	2025-09-27 06:05:04.575	c09b8292-ebcd-46aa-8b7c-d252d5d1b123	Tarea desde postman 3	postman hizo esto 3.	\N	\N	OPEN
-5	2	2	2025-09-27 05:52:04.138	2025-09-27 05:52:04.138	5ec287d6-2c9d-4f93-8727-8c248dc65d05	Tarea desde postman 2	postman hizo esto 2.	\N	\N	OPEN
+4	\N	\N	2025-10-03 12:18:45.885	2025-10-03 12:18:45.885	d1f0b8e3-2409-4992-9677-90f458895832	Tarea desde postman 3	postman hizo esto 3.	\N	\N	OPEN
+5	\N	\N	2025-10-03 12:20:12.388	2025-10-03 12:20:12.388	65295f7d-3764-417f-b9b5-1c4e643d23de	Tarea desde postman 3	postman hizo esto 3.	\N	\N	OPEN
+6	\N	\N	2025-10-03 12:20:53.469	2025-10-03 12:20:53.469	5aec4972-9483-4d17-ac6b-6880fc68cb15	Tarea desde postman 6	postman hizo esto.	\N	\N	OPEN
+7	\N	\N	2025-10-03 12:23:39.777	2025-10-03 12:23:39.777	d6d000a4-1485-48be-9240-4aa6dcc475e8	Tarea desde postman 6	postman hizo esto.	\N	\N	OPEN
+8	3	3	2025-10-03 12:25:42.933	2025-10-03 12:25:42.933	ab8a9242-efe7-4638-b00e-feb28d78e7fd	Tarea desde postman 6	postman hizo esto.	\N	\N	OPEN
+9	3	3	2025-10-03 12:29:03.52	2025-10-03 12:29:03.52	c627a5e7-66b8-479d-bd60-c4dc074c5198	Tarea desde postman 6	postman hizo esto.	\N	\N	OPEN
+10	3	3	2025-10-03 12:30:13.967	2025-10-03 12:30:13.967	0b9a3e7c-91ff-4718-b862-7329f5732dbd	Tarea desde postman 6	postman hizo esto.	\N	\N	OPEN
+11	3	3	2025-10-03 12:32:04.095	2025-10-03 12:32:04.095	e938a320-c003-4b42-95c5-e3068d7a4dea	Tarea desde postman 6	postman hizo esto.	\N	\N	OPEN
+12	3	3	2025-10-03 12:32:34.801	2025-10-03 12:32:34.801	56bf6575-4052-4185-bea7-01e145fa0234	Tarea desde postman 6	postman hizo esto.	2025-10-09 18:00:00	2025-10-02 18:00:00	OPEN
+13	3	3	2025-10-03 12:35:14.46	2025-10-03 12:35:14.46	49f8958e-7f1d-4d2f-a968-7af6f89d8f24	Tarea desde postman 6	postman hizo esto.	2025-10-09 18:00:00	2025-10-02 18:00:00	OPEN
+14	2	3	2025-10-03 17:04:04.017	2025-10-03 17:04:04.017	83918496-a8cd-4ecf-ab0f-00f8d2b0ef46	Tarea desde postman. 	Creada por id 3.	2025-10-09 18:00:00	2025-10-02 18:00:00	OPEN
 \.
 
 
@@ -214,8 +227,10 @@ COPY public.tasks (id, assignee_id, created_by, created_at, updated_at, taskid, 
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.users (id, username, email, password, role, created_at, updated_at) FROM stdin;
-2	julian	julian@julian.com	Test123	worker	2025-09-13 04:26:38.239176	2025-09-13 04:26:38.239176
+COPY public.users (id, created_at, updated_at, username, email, password, role) FROM stdin;
+2	2025-09-13 04:26:38.239176	2025-09-13 04:26:38.239176	Julian	julian@julian.com	Test123	worker
+3	2025-10-03 06:03:54.409927	2025-10-03 06:03:54.409927	Angel	angel@angel.com	Test123	worker
+4	2025-10-03 06:04:31.91784	2025-10-03 06:04:31.91784	Admin	admin@admin.com	Test123	admin
 \.
 
 
@@ -223,21 +238,21 @@ COPY public.users (id, username, email, password, role, created_at, updated_at) 
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.comments_id_seq', 2, true);
+SELECT pg_catalog.setval('public.comments_id_seq', 8, true);
 
 
 --
 -- Name: tasks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.tasks_id_seq', 6, true);
+SELECT pg_catalog.setval('public.tasks_id_seq', 14, true);
 
 
 --
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 2, true);
+SELECT pg_catalog.setval('public.users_id_seq', 4, true);
 
 
 --
@@ -257,27 +272,11 @@ ALTER TABLE ONLY public.tasks
 
 
 --
--- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_email_key UNIQUE (email);
-
-
---
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
-
-
---
--- Name: users users_username_key; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_username_key UNIQUE (username);
 
 
 --

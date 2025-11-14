@@ -5,6 +5,7 @@ import { TaskStatus } from './tasks.model';
 import { v4 as uuid } from 'uuid';
 import { Body } from '@nestjs/common';
 import { Param } from '@nestjs/common';
+import { CreateTaskDto } from './dto/create-task.dto';
 
 // This controller handles all the calls related to "/tasks" endpoint
 // Notice that what is inside the parenthesis of @Controller is the base route for this controller
@@ -31,11 +32,8 @@ export class TasksController {
     // }
 
     @Post()
-    createTask(
-        @Body('title') title: string,
-        @Body('description') description: string): Task {
-            console.log(title, description);
-            const task = this.tasksService.createTask(title, description);
+    createTask(@Body() CreateTaskDto: CreateTaskDto): Task {
+            const task = this.tasksService.createTask(CreateTaskDto);
             console.log('Task', task.title, 'created:', task);
             return task;
     }
